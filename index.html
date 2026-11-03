@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>台股資金流儀表板</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #08121e;
+      --card-bg: rgba(13, 27, 46, 0.95);
+      --card-border: rgba(30, 58, 95, 0.6);
+      --green: #00ffa6;
+      --red: #ff4a5a;
+      --blue: #2563eb;
+      --amber: #f59e0b;
+      --text-gray: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-dark);
+      background-image: radial-gradient(circle at 50% 0%, #0d223a 0%, #08121e 75%);
+      color: #fff;
+      font-family: 'Noto Sans TC', sans-serif;
+      padding: 16px;
+      min-height: 100vh;
+    }
+    .container { max-width: 1080px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+    .header { display: flex; justify-content: space-between; align-items: center; padding: 4px 8px; }
+    .title { font-size: 28px; font-weight: 900; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
+    .badge-date {
+      background: rgba(14, 165, 233, 0.15);
+      border: 1px solid rgba(14, 165, 233, 0.4);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #38bdf8;
+    }
+    .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .card-head { display: flex; align-items: center; gap: 8px; font-size: 15px; color: #cbd5e1; font-weight: 600; }
+    .kpi-main { display: flex; align-items: baseline; gap: 8px; margin: 12px 0 6px 0; }
+    .kpi-tag {
+      background: rgba(0, 255, 166, 0.12);
+      border: 1px solid var(--green);
+      color: var(--green);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .kpi-num { font-size: 32px; font-weight: 900; }
+    .num-green { color: var(--green); }
+    .num-red { color: var(--red); }
+    .kpi-sub { font-size: 13px; color: var(--text-gray); font-weight: 500; }
+    .chart-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 20px; }
+    .chart-header { font-size: 20px; font-weight: 800; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+    .matrix-grid { display: grid; grid-template-columns: 140px repeat(5, 1fr); gap: 12px 10px; align-items: center; }
+    .col-header { text-align: center; font-size: 14px; font-weight: 700; color: #94a3b8; padding-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .row-label { font-size: 14px; font-weight: 700; display: flex; flex-direction: column; }
+    .row-label span { font-size: 11px; color: var(--text-gray); font-weight: 400; }
+    .cell-box {
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 8px;
+      padding: 10px 4px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+    }
+    .bar-pill {
+      font-size: 13px;
+      font-weight: 800;
+      padding: 4px 8px;
+      border-radius: 5px;
+      width: 85%;
+      display: inline-block;
+    }
+    .pill-green { background: rgba(0, 255, 166, 0.2); color: var(--green); border: 1px solid rgba(0,255,166,0.3); }
+    .pill-red { background: rgba(255, 74, 90, 0.2); color: var(--red); border: 1px solid rgba(255,74,90,0.3); }
+    .pill-amber { background: rgba(245, 158, 11, 0.2); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
+    .insight-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+    }
+    .flow-steps { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 320px; }
+    .step-box {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .step-box small { font-size: 11px; color: var(--text-gray); font-weight: 400; }
+    .flow-arrow { color: #38bdf8; font-weight: 900; }
+    .insight-narrative {
+      flex: 1;
+      min-width: 280px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #cbd5e1;
+      border-left: 2px solid #0284c7;
+      padding-left: 12px;
+    }
+    .footer { text-align: center; font-size: 12px; color: #64748b; margin-top: 8px; }
+    @media (max-width: 768px) {
+      .kpi-grid { grid-template-columns: 1fr; }
+      .matrix-grid { overflow-x: auto; min-width: 620px; }
+      .chart-card { overflow-x: auto; }
+      .title { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="title">📊 台股資金流儀表板</div>
+      <div class="badge-date" id="period-title">載入中...</div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="card">
+        <div class="card-head">🌐 外資現貨買賣超 (過去5日)</div>
+        <div class="kpi-main">
+          <span class="kpi-tag" id="kpi-foreign-tag">賣超</span>
+          <span class="kpi-num num-green" id="kpi-foreign-val">--</span>
+        </div>
+        <div class="kpi-sub" id="kpi-foreign-sub">五大買賣超金額計算中...</div>
+      </div>
+      <div class="card">
+        <div class="card-head">📈 加權指數 (過去5日)</div>
+        <div class="kpi-main">
+          <span class="kpi-num num-green" id="kpi-taiex-pts">--</span>
+        </div>
+        <div class="kpi-sub" id="kpi-taiex-pct">--</div>
+      </div>
+      <div class="card">
+        <div class="card-head">💵 新台幣兌美元 (過去5日)</div>
+        <div class="kpi-main">
+          <span class="kpi-num num-green" id="kpi-fx-cents">--</span>
+        </div>
+        <div class="kpi-sub" id="kpi-fx-pct">--</div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-header">📊 每日資金流、股價與匯率 (滾動五日)</div>
+      <div class="matrix-grid" id="matrix-container">
+        <!-- 動態渲染五日資訊 -->
+      </div>
+    </div>
+
+    <div class="insight-card">
+      <div class="flow-steps">
+        <div class="step-box" id="step-1">外資賣超<small>資金流出，壓抑台股</small></div>
+        <div class="flow-arrow">➔</div>
+        <div class="step-box" id="step-2">台股下跌<small>加權指數偏弱</small></div>
+        <div class="flow-arrow">➔</div>
+        <div class="step-box" id="step-3">新台幣貶值<small>匯率走弱承壓</small></div>
+      </div>
+      <div class="insight-narrative" id="insight-text">
+        <strong>三者連動顯示：</strong><br>
+        外資賣超導致台股承壓，資金流出促使新台幣偏弱盤整。
+      </div>
+    </div>
+
+    <div class="footer" id="update-time">【資料更新時間】: 載入中...</div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      fetch('./data.json?t=' + new Date().getTime())
+        .then(res => res.json())
+        .then(data => render(data))
+        .catch(err => {
+          document.getElementById('period-title').innerText = "資料載入失敗";
+          console.error(err);
+        });
+    });
+
+    function render(data) {
+      document.getElementById('period-title').innerText = data.period_title;
+      document.getElementById('update-time').innerText = "【資料更新時間】: " + data.update_time;
+
+      document.getElementById('kpi-foreign-tag').innerText = data.kpi.foreign_net.label;
+      document.getElementById('kpi-foreign-val').innerText = data.kpi.foreign_net.value;
+      document.getElementById('kpi-foreign-sub').innerText = data.kpi.foreign_net.subtext;
+
+      document.getElementById('kpi-taiex-pts').innerText = data.kpi.taiex.points;
+      document.getElementById('kpi-taiex-pct').innerText = data.kpi.taiex.pct;
+
+      document.getElementById('kpi-fx-cents').innerText = data.kpi.fx.cents;
+      document.getElementById('kpi-fx-pct').innerText = data.kpi.fx.pct;
+
+      const container = document.getElementById('matrix-container');
+      let html = '<div></div>';
+      data.daily_data.forEach(d => {
+        html += `<div class="col-header">${d.date} (${d.weekday})</div>`;
+      });
+
+      // Row 1: 外資買賣超
+      html += `<div class="row-label">外資買賣超<span>(億元)</span></div>`;
+      data.daily_data.forEach(d => {
+        const isPos = d.foreign_net >= 0;
+        const cls = isPos ? 'pill-red' : 'pill-green';
+        const sign = isPos ? '+' : '';
+        html += `<div class="cell-box"><span class="bar-pill ${cls}">${sign}${d.foreign_net}</span></div>`;
+      });
+
+      // Row 2: 加權指數漲跌幅
+      html += `<div class="row-label">加權指數漲跌<span>(%)</span></div>`;
+      data.daily_data.forEach(d => {
+        const isPos = d.taiex_change_pct >= 0;
+        const cls = isPos ? 'pill-red' : 'pill-green';
+        const sign = isPos ? '+' : '';
+        html += `<div class="cell-box"><span class="bar-pill ${cls}">${sign}${d.taiex_change_pct}%</span></div>`;
+      });
+
+      // Row 3: 匯市成交量
+      html += `<div class="row-label">新台幣匯市量<span>(億美元)</span></div>`;
+      data.daily_data.forEach(d => {
+        html += `<div class="cell-box"><span class="bar-pill pill-amber">${d.total_fx_vol}</span></div>`;
+      });
+
+      container.innerHTML = html;
+    }
+  </script>
+</body>
+</html>
