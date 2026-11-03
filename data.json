@@ -1,0 +1,26 @@
+{
+  "update_time": "2026/10/21 16:35:00",
+  "period_title": "本週統計 10/15 - 10/21",
+  "kpi": {
+    "foreign_net": {
+      "label": "賣超",
+      "value": "5,038 億元",
+      "subtext": "五大買賣超金額，單日最大 10/15 -3,025 億"
+    },
+    "taiex": {
+      "points": "▼ 82.10 點",
+      "pct": "本週跌幅 -0.17%"
+    },
+    "fx": {
+      "cents": "▼ 2.85 角",
+      "pct": "(0.88%)"
+    }
+  },
+  "daily_data": [
+    { "date": "10/15", "weekday": "四", "foreign_net": -3026, "taiex_change_pct": -3.41, "total_fx_vol": 91.2 },
+    { "date": "10/16", "weekday": "五", "foreign_net": -461, "taiex_change_pct": 0.30, "total_fx_vol": 46.1 },
+    { "date": "10/19", "weekday": "一", "foreign_net": -783, "taiex_change_pct": -0.61, "total_fx_vol": 58.4 },
+    { "date": "10/20", "weekday": "二", "foreign_net": -778, "taiex_change_pct": -1.13, "total_fx_vol": 63.8 },
+    { "date": "10/21", "weekday": "三", "foreign_net": 10, "taiex_change_pct": 1.28, "total_fx_vol": 42.5 }
+  ]
+}
