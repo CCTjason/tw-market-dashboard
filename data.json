@@ -1,11 +1,11 @@
 {
-  "update_time": "2026/11/10 05:21:09",
-  "period_title": "本週統計 11/04 - 11/10",
+  "update_time": "2026/11/11 02:31:59",
+  "period_title": "本週統計 11/05 - 11/11",
   "kpi": {
     "foreign_net": {
       "label": "賣超",
       "value": "3,941 億元",
-      "subtext": "五大買賣超金額，單日最大 11/04 -1,582 億"
+      "subtext": "五大買賣超金額，單日最大 11/05 -1,582 億"
     },
     "taiex": {
       "points": "▼ 582.40 點",
@@ -19,40 +19,40 @@
   },
   "daily_data": [
     {
-      "date": "11/04",
-      "weekday": "三",
+      "date": "11/05",
+      "weekday": "四",
       "foreign_net": -1582,
       "taiex_change_pct": -0.92,
       "total_fx_vol": 48.2,
       "fx_rate": 32.05
     },
     {
-      "date": "11/05",
-      "weekday": "四",
+      "date": "11/06",
+      "weekday": "五",
       "foreign_net": -412,
       "taiex_change_pct": 0.45,
       "total_fx_vol": 39.5,
       "fx_rate": 32.12
     },
     {
-      "date": "11/06",
-      "weekday": "五",
+      "date": "11/09",
+      "weekday": "一",
       "foreign_net": -731,
       "taiex_change_pct": -0.68,
       "total_fx_vol": 52.1,
       "fx_rate": 32.18
     },
     {
-      "date": "11/09",
-      "weekday": "一",
+      "date": "11/10",
+      "weekday": "二",
       "foreign_net": -1254,
       "taiex_change_pct": -1.24,
       "total_fx_vol": 71.3,
       "fx_rate": 32.25
     },
     {
-      "date": "11/10",
-      "weekday": "二",
+      "date": "11/11",
+      "weekday": "三",
       "foreign_net": 38,
       "taiex_change_pct": 0.86,
       "total_fx_vol": 44.6,
